@@ -1,4 +1,5 @@
-streamlit==1.30.0
+streamlit==1.38.0
 pandas==2.2.2
 numpy==1.24.4
 plotly==5.18.0
+rich<14.0.0
