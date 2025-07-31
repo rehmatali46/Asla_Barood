@@ -1,0 +1,97 @@
+```
+streamlit==1.39.0
+pandas==2.2.2
+numpy==1.26.4
+plotly==5.24.1
+```
+
+### Explanation of Dependencies
+- **`streamlit==1.39.0`**: The core library for building and running the Streamlit app. Version 1.39.0 is a recent stable version as of July 2025.
+- **`pandas==2.2.2`**: Used for data manipulation and analysis (e.g., loading and filtering the CSV file). Version 2.2.2 is stable and widely used.
+- **`numpy==1.26.4`**: Required for numerical operations, such as those in the age calculation. Version 1.26.4 is compatible with Pandas and other libraries.
+- **`plotly==5.24.1`**: Used for creating interactive charts (e.g., pie, bar, and donut charts). Version 5.24.1 supports the `hole` parameter for donut charts and is stable.
+
+### Steps to Deploy on Streamlit Community Cloud
+1. **Prepare Your Project**:
+   - Ensure your `police_weapon_tracker.py` (from the previous response) and `requirements.txt` are in a GitHub repository.
+   - Include the `bhopal_weapon_licenses_comprehensive.csv` file in the repository if it’s required for the app to function, or modify the app to handle file uploads exclusively if the dataset is sensitive or large.
+
+2. **Push to GitHub**:
+   - Create a GitHub repository (e.g., `bhopal-police-weapon-tracker`).
+   - Add `police_weapon_tracker.py`, `requirements.txt`, and optionally the CSV file to the repository.
+   - Commit and push the files:
+     ```bash
+     git init
+     git add police_weapon_tracker.py requirements.txt bhopal_weapon_licenses_comprehensive.csv
+     git commit -m "Initial commit for Streamlit app"
+     git branch -M main
+     git remote add origin <your-repo-url>
+     git push -u origin main
+     ```
+
+3. **Sign Up for Streamlit Community Cloud**:
+   - Go to [share.streamlit.io](https://share.streamlit.io/) and sign in with your GitHub account.
+   - If you haven’t already, connect your GitHub account to Streamlit Community Cloud.
+
+4. **Deploy the App**:
+   - In Streamlit Community Cloud, click **New App** and select your GitHub repository.
+   - Specify the branch (e.g., `main`) and the main script path (`police_weapon_tracker.py`).
+   - Click **Deploy**. Streamlit will automatically install the dependencies listed in `requirements.txt` and deploy the app.
+
+5. **Verify Deployment**:
+   - Once deployed, Streamlit provides a URL (e.g., `https://your-app-name.streamlit.app`) where your app is hosted.
+   - Visit the URL and test all pages (Dashboard, Weapon Management, Analytics, Notifications, Reports) to ensure they work as expected.
+   - Check the Analytics page to confirm the donut chart (using `px.pie` with `hole=0.4`) renders correctly.
+
+### Additional Considerations
+- **Dataset Handling**:
+  - If `bhopal_weapon_licenses_comprehensive.csv` is included in the repository, ensure it’s not sensitive, as GitHub repositories are public unless private.
+  - Alternatively, rely on the app’s file upload feature (already implemented in the sidebar) to allow users to upload the CSV file, avoiding the need to include it in the repository.
+  - If the CSV is large, consider optimizing the app to handle uploads efficiently or preprocess the data to reduce size.
+
+- **Environment Compatibility**:
+  - Streamlit Community Cloud uses a Linux-based environment, so ensure your app is compatible with Python 3.8+ (Streamlit supports up to Python 3.11 as of July 2025).
+  - The specified versions in `requirements.txt` are compatible, but you can omit version numbers (e.g., `streamlit`, `pandas`, etc.) to use the latest versions, though pinning versions ensures consistency.
+
+- **Potential Issues**:
+  - **FileNotFoundError**: If the app expects `bhopal_weapon_licenses_comprehensive.csv` to be present, you may encounter an error on deployment unless the file is included or uploaded. Test the file upload feature to bypass this.
+  - **Memory Limits**: Streamlit Community Cloud has resource limits (1 GB RAM, limited CPU). Ensure your CSV file isn’t too large, and optimize data processing if needed (e.g., load only necessary columns with `pd.read_csv(..., usecols=[...])`).
+  - **Session State**: The app uses `st.session_state` for state management. Streamlit Cloud handles session state well, but test features like notifications and data refreshes to ensure persistence works as expected.
+
+- **Security**:
+  - The app simulates sending notifications (`send_notification_simulation`). If you plan to implement real SMS notifications, integrate a service like Twilio and store API keys securely using Streamlit’s secrets management (`[secrets]` in `.streamlit/secrets.toml`).
+  - Avoid hardcoding sensitive data (e.g., contact numbers) in the code.
+
+- **Testing Locally**:
+  - Before deploying, test the app locally to ensure all dependencies work:
+    ```bash
+    pip install -r requirements.txt
+    streamlit run police_weapon_tracker.py
+    ```
+  - Verify the Analytics page’s donut chart and other features.
+
+- **Custom Domain (Optional)**:
+  - Streamlit Community Cloud doesn’t support custom domains directly. For a professional deployment, consider Streamlit Enterprise or a custom server with a reverse proxy (e.g., using Heroku or AWS).
+
+### Troubleshooting Deployment
+- **Check Logs**: If the app fails to deploy, check the logs in Streamlit Community Cloud’s dashboard for errors (e.g., missing dependencies or file issues).
+- **Dependency Conflicts**: If you encounter conflicts, try updating versions in `requirements.txt` or use a virtual environment locally to test compatibility.
+- **CSV File Issues**: If the app fails due to a missing CSV, ensure the file upload feature is used or include a sample CSV in the repository for testing.
+
+### Example Repository Structure
+```
+bhopal-police-weapon-tracker/
+├── police_weapon_tracker.py
+├── requirements.txt
+└── bhopal_weapon_licenses_comprehensive.csv  # Optional, if included
+```
+
+### Sample CSV Format
+Ensure `bhopal_weapon_licenses_comprehensive.csv` has the expected columns:
+```csv
+Name,License_No,Area,Police_Station,Address,Gun_Type,Weapon_Model,Issue_Date,Expiry_Date,Status,Mobile,Gender,DOB,Remarks
+John Doe,WL12345,MP Nagar,MP Nagar Police Station,123 Street,Handgun,Glock 19,2020-01-01,2025-01-01,Active,1234567890,Male,1980-05-15,Valid
+...
+```
+
+If you need help with specific deployment errors, setting up GitHub, or optimizing the app for Streamlit Cloud, let me know!
